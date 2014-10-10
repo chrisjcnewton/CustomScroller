@@ -13,12 +13,8 @@ var CustomScroll = CustomScroll || function(domElem, options){
 	
 	function setupDomElements(){
 		if(options && options.ease != undefined) easeEnabled = options.ease;
-		
-		
-		domElemHeight = domElem.offsetHeight;
-		console.log('domElemHeight = '+domElemHeight);
-		
-		
+				
+		domElemHeight = domElem.offsetHeight;		
 		parentElem = domElem.parentNode;
 		parentElem.removeChild(domElem);
 		scrollBase = document.createElement('div');		
