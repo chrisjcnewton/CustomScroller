@@ -149,16 +149,7 @@ var CustomScroll = CustomScroll || function(domElem, options){
 				scrollThumb.style.top = totalYDist + 'px';	
 
 			}
-			/*
-			if(triggerAnimationFunc){
-				if(lastY < newYpos){
-					triggerAnimationFunc(false);
-				}else{
-					triggerAnimationFunc(true);					
-				}				
-			}
-			lastY = newYpos;
-			*/
+			
 		}			
 	}
 	
@@ -166,12 +157,7 @@ var CustomScroll = CustomScroll || function(domElem, options){
 	function onThumbUp(e){	
 		
 		e = window.event || e;		
-		var browserWidth = document.documentElement.clientWidth;
-		/*
-		console.log(e.type);
-		console.log('xpos = '+e.x);
-		console.log('brow width = '+browserWidth);
-		*/
+		var browserWidth = document.documentElement.clientWidth;		
 		if(e.type === 'mouseout' && e.x < browserWidth && e.x > 0) return;
 				
 		thumbDown = false;
@@ -195,11 +181,12 @@ var CustomScroll = CustomScroll || function(domElem, options){
 		}else{			
 			scrollTrack.style.visibility = 'visible';			
 		}
-		
+		/*
 		console.log('height = '+height);
 		console.log('cntHeight = '+cntHeight);
 		console.log('trcHeight = '+trcHeight);
 		console.log('thumb height = '+newThumbHeight);
+		*/
 	}
 	
 	function onScroll (e) {
@@ -229,15 +216,7 @@ var CustomScroll = CustomScroll || function(domElem, options){
 		    	
 		    }
 			if(e.preventDefault)e.preventDefault();
-			/*
-			if(triggerAnimationFunc){
-				if(delta < 0){
-					triggerAnimationFunc(false);
-				}else{
-					triggerAnimationFunc(true);					
-				}				
-			}
-			*/
+			
 	   }
 	}
 	
