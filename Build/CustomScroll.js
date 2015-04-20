@@ -32,8 +32,6 @@ var CustomScroll = CustomScroll || function(domElem, options){
 
 		scrollBase.style.position = "relative";
 		scrollBase.style.overflow = "hidden";
-		//scrollBase.style.width = (options && options.width)? options.width : domElemWidth+"px";
-		//scrollBase.style.height = (options && options.height)? options.height : domElemHeight+"px";
 
 		scrollArea.style.position = "relative";
 		scrollArea.style.width = "100%";
@@ -148,9 +146,7 @@ var CustomScroll = CustomScroll || function(domElem, options){
 					scrollArea.scrollTop = Math.round( cntHeight - height);
 				}
 				scrollThumb.style.top = totalYDist + 'px';
-
 			}
-
 		}
 	};
 
@@ -170,11 +166,10 @@ var CustomScroll = CustomScroll || function(domElem, options){
 
 
 	var _calculateThumbHeight = function(){
-
-	    height = parseInt(scrollArea.offsetHeight, 10);
-	    cntHeight = parseInt(domElem.offsetHeight, 10);
-	    trcHeight = parseInt(scrollTrack.offsetHeight, 10);
-	    var newThumbHeight = Math.round(height / cntHeight * trcHeight);
+		height = parseInt(scrollArea.offsetHeight, 10);
+	  cntHeight = parseInt(domElem.offsetHeight, 10);
+	  trcHeight = parseInt(scrollTrack.offsetHeight, 10);
+	  var newThumbHeight = Math.round(height / cntHeight * trcHeight);
 		scrollThumb.style.height =  newThumbHeight+ 'px'; // Set the scrollbar thumb hight
 		scrollThumb.style.top = (scrollArea.scrollTop / cntHeight * trcHeight) + 'px';
 
@@ -183,55 +178,49 @@ var CustomScroll = CustomScroll || function(domElem, options){
 		}else{
 			scrollTrack.style.visibility = 'visible';
 		}
-		/*
-		console.log('height = '+height);
-		console.log('cntHeight = '+cntHeight);
-		console.log('trcHeight = '+trcHeight);
-		console.log('thumb height = '+newThumbHeight);
-		*/
 	};
 
 	var _onScroll  = function(e) {
 		if(!thumbDown){
-		    // cross-browser wheel delta
-		    e = window.event || e;
+	    // cross-browser wheel delta
+	    e = window.event || e;
 
-				var allowBrowserScroll = false;
+			var allowBrowserScroll = false;
 
-		    if(easeEnabled){
-			    var delta = e.wheelDelta ||-e.detail*30;
-			    var maxScrollTop = scrollArea.scrollHeight - scrollArea.offsetHeight;
-				if(easedYpos >= maxScrollTop && delta < 0){
-					easedYpos = maxScrollTop;
+	    if(easeEnabled){
+		    var delta = e.wheelDelta ||-e.detail*30;
+		    var maxScrollTop = scrollArea.scrollHeight - scrollArea.offsetHeight;
+			if(easedYpos >= maxScrollTop && delta < 0){
+				easedYpos = maxScrollTop;
+				allowBrowserScroll = true;
+			}else if(easedYpos<0 && delta > 0){
+				easedYpos = 0;
+				yDist = 0;
+				allowBrowserScroll = true;
+			}
+			else{
+	        	yDist -= delta/15;
+	        }
+	    }else{
+	    	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+		    var scrolltop = scrollArea.scrollTop;
+				var maxScrollTop = scrollArea.scrollHeight - scrollArea.offsetHeight;
+
+				if(scrolltop >= maxScrollTop && delta < 0){
 					allowBrowserScroll = true;
-				}else if(easedYpos<0 && delta > 0){
-					easedYpos = 0;
-					yDist = 0;
+				}else if(scrolltop<=0 && delta > 0){
 					allowBrowserScroll = true;
 				}
 				else{
-		        	yDist -= delta/15;
-		        }
-		    }else{
-		    	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-			    var scrolltop = scrollArea.scrollTop;
-					var maxScrollTop = scrollArea.scrollHeight - scrollArea.offsetHeight;
+			    //scrollTop property takes positive values when you scroll down and our delta variable behaves otherwise, so the equation will be:
+			    scrollArea.scrollTop = scrolltop - delta * mean;
+			    //set top position for the scrollbar thumb
+			    scrollThumb.style.top = (scrollArea.scrollTop / cntHeight * trcHeight) + 'px';
+				}
+	    }
 
-					if(scrolltop >= maxScrollTop && delta < 0){
-						allowBrowserScroll = true;
-					}else if(scrolltop<=0 && delta > 0){
-						allowBrowserScroll = true;
-					}
-					else{
-				    //scrollTop property takes positive values when you scroll down and our delta variable behaves otherwise, so the equation will be:
-				    scrollArea.scrollTop = scrolltop - delta * mean;
-				    //set top position for the scrollbar thumb
-				    scrollThumb.style.top = (scrollArea.scrollTop / cntHeight * trcHeight) + 'px';
-					}
-		    }
-
-				if(e.preventDefault && !allowBrowserScroll)e.preventDefault();
-	   }
+			if(e.preventDefault && !allowBrowserScroll)e.preventDefault();
+	  }
 	};
 
 
@@ -266,7 +255,6 @@ var CustomScroll = CustomScroll || function(domElem, options){
 	};
 
 
-
 	var _onResize = function(){
 		_calculateThumbHeight();
   };
@@ -274,7 +262,7 @@ var CustomScroll = CustomScroll || function(domElem, options){
 
 	// Public Methods
 
-	var updateHeight = function(newHeight){
+	var setHeight = function(newHeight){
 		if(newHeight){
 			scrollBase.style.height = newHeight + "px";
 			scrollArea.style.height = newHeight + "px";
@@ -295,7 +283,7 @@ var CustomScroll = CustomScroll || function(domElem, options){
 	if(isTouch){
 		domElem.style['-webkit-overflow-scrolling'] = "touch";
 		return{
-			updateHeight:function(){},
+			setHeight:function(){},
 			onScroll:function(){},
 			gotoYPos:function(){}
 		};
@@ -305,7 +293,7 @@ var CustomScroll = CustomScroll || function(domElem, options){
 
 
 	return{
-		updateHeight:updateHeight,
+		setHeight:setHeight,
 		onScroll:onScroll,
 		gotoYPos:gotoYPos
 	};
